@@ -183,6 +183,28 @@ describe('API tests', () => {
                 .get('/rides')
                 .expect(200, done);
         });
+
+        it('should return rides with default pagination (page: 0, per_page: 10)', (done) => {
+            request(app)
+                .get('/rides')
+                .expect(200)
+                .then((resp) => {
+                    return resp.body.length === 2;
+                });
+
+            done();
+        });
+
+        it('should return rides with pagination request (page: 0, per_page: 1)', (done) => {
+            request(app)
+                .get('/rides?page=0&item_per_page=1')
+                .expect(200)
+                .then((resp) => {
+                    return resp.body.length === 1;
+                });
+
+            done();
+        });
     });
     
     describe('GET /rides/:id', () => {
