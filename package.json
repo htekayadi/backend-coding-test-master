@@ -7,9 +7,10 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests",
+    "test": "./node_modules/.bin/nyc mocha tests --exit && ./node_modules/.bin/nyc check-coverage",
+    "test:load": "./node_modules/.bin/artillery run artillery-test.yml",
     "start": "node index.js",
-    "lint": "./node_modules/.bin/eslint --fix src/**.js tests/**.js"
+    "lint": "./node_modules/.bin/eslint --quiet --fix src"
   },
   "keywords": [
     "Xendit"
@@ -18,15 +19,21 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "express": "^4.16.4",
-    "sqlite3": "^4.0.6"
+    "express": "^4.16.4"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
+    "app-root-path": "^3.0.0",
     "eslint": "^7.28.0",
+    "husky": "^1.1.4",
     "mocha": "^6.1.4",
-    "supertest": "^4.0.2"
+    "nyc": "^15.1.0",
+    "prettier": "^2.3.1",
+    "sequelize": "^6.6.2",
+    "sqlite3": "^4.2.0",
+    "supertest": "^4.0.2",
+    "winston": "^3.3.3"
   },
   "husky": {
     "hooks": {
