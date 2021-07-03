@@ -78,7 +78,15 @@ module.exports = (db) => {
   });
 
   app.get('/rides', (req, res) => {
-    db.all('SELECT * FROM Rides', function(err, rows) {
+    let {page, per_page} = req.query;
+    if (!page) {
+      page = 0;
+    }
+    if (!per_page) {
+      per_page = 10;
+    }
+
+    db.all(`SELECT * FROM Rides LIMIT ${per_page} OFFSET ${page * per_page}`, function(err, rows) {
       if (err) {
         return res.status(500).send({
           error_code: 'SERVER_ERROR',
