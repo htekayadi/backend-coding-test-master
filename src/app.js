@@ -86,7 +86,10 @@ module.exports = (db) => {
       per_page = 10;
     }
 
-    db.all(`SELECT * FROM Rides LIMIT ${per_page} OFFSET ${page * per_page}`, function(err, rows) {
+    db.all('SELECT * FROM Rides LIMIT $per_page OFFSET $offset', {
+      $per_page: per_page,
+      $offset: page * per_page,
+    }, function(err, rows) {
       if (err) {
         return res.status(500).send({
           error_code: 'SERVER_ERROR',
@@ -106,7 +109,9 @@ module.exports = (db) => {
   });
 
   app.get('/rides/:id', (req, res) => {
-    db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function(err, rows) {
+    db.all('SELECT * FROM Rides WHERE rideID=$id', {
+      $id: req.params.id
+    }, function(err, rows) {
       if (err) {
         return res.status(500).send({
           error_code: 'SERVER_ERROR',

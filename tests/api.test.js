@@ -183,7 +183,6 @@ describe('API tests', () => {
                 .get('/rides')
                 .expect(200, done);
         });
-
         it('should return rides with default pagination (page: 0, per_page: 10)', (done) => {
             request(app)
                 .get('/rides')
@@ -194,7 +193,11 @@ describe('API tests', () => {
 
             done();
         });
-
+        it('should return 500 internal server error', (done) => {
+            request(app)
+                .get('/rides?page=0&per_page=1;%20DROP%20TABLE%20users')
+                .expect(500, done);
+        });
         it('should return rides with pagination request (page: 0, per_page: 1)', (done) => {
             request(app)
                 .get('/rides?page=0&item_per_page=1')
@@ -213,6 +216,16 @@ describe('API tests', () => {
                 .get('/rides/9999')
                 .expect(404, done);
         });
+        it('should return 404 not found (no rides with id=1%20OR%201=1)', (done) => {
+            request(app)
+                .get('/rides/1%20OR%201=1')
+                .expect(404, done)
+        })
+        it('should return 404 not found (no rides with id=1%20or%20""="")', (done) => {
+            request(app)
+                .get('/rides/1%20or%20""=""')
+                .expect(404, done)
+        })
         it('should return a ride', (done) => {
             request(app)
                 .post('/rides')
