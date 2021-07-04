@@ -30,14 +30,6 @@ describe('API tests', () => {
         });
     });
 
-    describe('GET /rides', () => {
-        it('should return 404 not found', (done) => {
-            request(app)
-                .get('/rides')
-                .expect(404, done);
-        });
-    });
-
     describe('POST /rides', () => {
         it('should return 400 Bad Request (invalid start latitude)', (done) => {
             request(app)
@@ -144,22 +136,6 @@ describe('API tests', () => {
                 })
                 .expect(400, done);
         });
-        it('should return 500 in case of server error', (done) => {
-            request(app)
-                .post('/rides')
-                .set('Content-type', 'application/json')
-                .send({
-                    start_lat: 0,
-                    start_long: 0,
-                    end_lat: 10,
-                    end_long: 10,
-                    rider_name: "Rider 01",
-                    driver_name: "Driver 01",
-                    driver_vehicle: "Vehicle 01",
-                    expect_error: true
-                })
-                .expect(500, done);
-        });
         it('should insert rides successfully', (done) => {
             request(app)
                 .post('/rides')
@@ -193,7 +169,7 @@ describe('API tests', () => {
 
             done();
         });
-        it('should return 500 internal server error', (done) => {
+        it('should return 500 internal server error (no rides with ?page=0&per_page=1;%20DROP%20TABLE%20users', (done) => {
             request(app)
                 .get('/rides?page=0&per_page=1;%20DROP%20TABLE%20users')
                 .expect(500, done);
@@ -224,6 +200,11 @@ describe('API tests', () => {
         it('should return 404 not found (no rides with id=1%20or%20""="")', (done) => {
             request(app)
                 .get('/rides/1%20or%20""=""')
+                .expect(404, done)
+        })
+        it('should return 404 not found (no rides with id=1%20UNION%20SELECT%20*%20FROM%20Rides")', (done) => {
+            request(app)
+                .get('/rides/1%20UNION%20SELECT%20*%20FROM%20Rides')
                 .expect(404, done)
         })
         it('should return a ride', (done) => {
